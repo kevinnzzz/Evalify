@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-gray-50 text-gray-800 font-sans;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .dark body {
+    @apply bg-gray-900 text-gray-100;
+  }
+}
+
+@layer components {
+  .sidebar-link {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-500 font-medium text-sm transition-all duration-200 cursor-pointer hover:bg-blue-50 hover:text-blue-600;
+  }
+
+  .sidebar-link.active {
+    @apply bg-blue-50 text-blue-600;
+  }
+
+  .dark .sidebar-link {
+    @apply text-gray-400 hover:bg-gray-800 hover:text-blue-400;
+  }
+
+  .dark .sidebar-link.active {
+    @apply bg-gray-800 text-blue-400;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl shadow-card border border-gray-100 p-6;
+  }
+
+  .dark .card {
+    @apply bg-gray-800 border-gray-700;
+  }
+
+  .btn-primary {
+    @apply bg-blue-600 text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-blue-700 active:scale-95 transition-all duration-150 text-sm;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-gray-700 font-semibold px-5 py-2.5 rounded-xl border border-gray-200 hover:bg-gray-50 active:scale-95 transition-all duration-150 text-sm;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150 placeholder-gray-400;
+  }
+
+  .dark .input-field {
+    @apply bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-500;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-200 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-300;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  @apply bg-gray-600;
+}
+
+/* Skeleton loading animation */
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+}
+
+.dark .skeleton {
+  background: linear-gradient(90deg, #374151 25%, #4B5563 50%, #374151 75%);
+  background-size: 1000px 100%;
+}
