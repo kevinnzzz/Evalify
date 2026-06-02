@@ -689,7 +689,7 @@ function Footer() {
   return (
     <footer className='bg-gray-900 text-gray-400 py-12'>
       <div className='max-w-6xl mx-auto px-6'>
-        <div className='grid grid-cols-2 md:grid-cols-4 gap-8 mb-10'>
+        <div className='flex justify-center gap-16 mb-10'>
           <div>
             <div className='text-xs font-semibold uppercase tracking-wide text-gray-500 mb-3'>Quick Links</div>
             <ul className='space-y-2'>
@@ -712,7 +712,7 @@ function Footer() {
               </span>
             </div>
             <div className='text-xs text-gray-500 mb-3'>Ikuti Kami</div>
-            <div className='flex gap-2'>
+            <div className='flex gap-2 justify-center'>
               {['f', 'in', 't', 'ig'].map((s) => (
                 <div key={s} className='w-8 h-8 bg-gray-800 hover:bg-blue-600 rounded-lg flex items-center justify-center cursor-pointer transition-colors text-xs font-bold text-gray-400 hover:text-white'>
                   {s}
