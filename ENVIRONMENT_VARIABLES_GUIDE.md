@@ -11,11 +11,13 @@ Panduan untuk mendapatkan dan mengatur semua environment variables yang diperluk
 **Definisi**: URL backend API Gateway Anda di Vercel
 
 **Nilai Contoh**:
+
 ```
 https://evalify-backend.vercel.app
 ```
 
 **Cara Mendapatkan**:
+
 1. Deploy backend terlebih dahulu ke Vercel
 2. Vercel akan generate URL yang akan muncul di deployment page
 3. Format: `https://{project-name}-{random-id}.vercel.app`
@@ -30,7 +32,8 @@ https://evalify-backend.vercel.app
 
 **Definisi**: Menyatakan environment sedang berjalan
 
-**Nilai**: 
+**Nilai**:
+
 ```
 production
 ```
@@ -44,6 +47,7 @@ production
 **Definisi**: Port yang digunakan server
 
 **Nilai**:
+
 ```
 3000
 ```
@@ -65,11 +69,13 @@ production
 5. Lihat **Project URL**
 
 **Contoh Nilai**:
+
 ```
 https://abcdefghijklmnop.supabase.co
 ```
 
 **Disimpan di Backend**:
+
 ```javascript
 const supabaseUrl = process.env.SUPABASE_URL;
 ```
@@ -88,11 +94,13 @@ const supabaseUrl = process.env.SUPABASE_URL;
 4. Lihat **anon public key** (bukan service_role key!)
 
 **Contoh Nilai**:
+
 ```
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFiY2RlZmdoaWprbG1ub3AiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTY3ODMwMTIwMCwiZXhwIjoxNjkzODUzMjAwfQ.1234567890abcdef...
 ```
 
 **Disimpan di Backend**:
+
 ```javascript
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 ```
@@ -111,6 +119,7 @@ const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 4. Lihat **service_role secret key** (bukan anon key!)
 
 **Contoh Nilai**:
+
 ```
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFiY2RlZmdoaWprbG1ub3AiLCJyb2xlIjoic2VydmljZV9yb2xlIiwiaWF0IjoxNjc4MzAxMjAwLCJleHAiOjE2OTM4NTMyMDB9.0987654321fedcba...
 ```
@@ -126,16 +135,19 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFiY2RlZmd
 **Cara Generate**:
 
 Jalankan di terminal:
+
 ```bash
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
 **Contoh Output**:
+
 ```
 a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2
 ```
 
 **Disimpan di Backend**:
+
 ```javascript
 const jwtSecret = process.env.JWT_SECRET;
 const token = jwt.sign({ userId: 123 }, jwtSecret, { expiresIn: '7d' });
@@ -148,15 +160,18 @@ const token = jwt.sign({ userId: 123 }, jwtSecret, { expiresIn: '7d' });
 **Definisi**: URL service untuk scoring/evaluasi CV
 
 **Nilai Saat Ini**:
+
 ```
 https://evalifycvevaluationscoring-api-production.up.railway.app
 ```
 
-**Cara Update**: 
+**Cara Update**:
+
 - Jika Anda memiliki service sendiri, ganti dengan URL service Anda
 - Pastikan service ini berjalan dan accessible
 
 **Digunakan di Backend**:
+
 ```javascript
 const cvScoringUrl = process.env.CV_SCORING_API_URL;
 await axios.post(`${cvScoringUrl}/api/score`, cvData);
@@ -169,6 +184,7 @@ await axios.post(`${cvScoringUrl}/api/score`, cvData);
 **Definisi**: URL service untuk Named Entity Recognition (NER) dari CV
 
 **Nilai Saat Ini**:
+
 ```
 https://evalifycvevaluationscoring-api-production.up.railway.app
 ```
@@ -182,6 +198,7 @@ https://evalifycvevaluationscoring-api-production.up.railway.app
 **Definisi**: URL service untuk interview simulation
 
 **Nilai Saat Ini**:
+
 ```
 https://ai-interview-simulation-production.up.railway.app
 ```
@@ -195,6 +212,7 @@ https://ai-interview-simulation-production.up.railway.app
 **Definisi**: Daftar origin yang diizinkan untuk CORS
 
 **Nilai**:
+
 ```
 https://evalify.vercel.app,http://localhost:5173
 ```
@@ -202,12 +220,14 @@ https://evalify.vercel.app,http://localhost:5173
 **Format**: Comma-separated (tanpa spasi)
 
 **Disimpan di Backend**:
+
 ```javascript
 const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',');
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 ```
 
 **Update**: Jika Anda punya multiple frontend deployment, tambahkan semua:
+
 ```
 https://evalify.vercel.app,https://evalify-staging.vercel.app,http://localhost:5173
 ```
@@ -219,11 +239,13 @@ https://evalify.vercel.app,https://evalify-staging.vercel.app,http://localhost:5
 **Definisi**: Email address untuk mengirim email (nodemailer)
 
 **Contoh Nilai**:
+
 ```
 your-email@gmail.com
 ```
 
 **Disimpan di Backend**:
+
 ```javascript
 const emailUser = process.env.EMAIL_USER;
 ```
@@ -243,6 +265,7 @@ const emailUser = process.env.EMAIL_USER;
 5. Copy password itu (remove spasi) → jadikan `EMAIL_PASSWORD`
 
 **Contoh Nilai**:
+
 ```
 abcdefghijklmnop
 ```
@@ -250,14 +273,15 @@ abcdefghijklmnop
 **⚠️ PENTING**: Ini berbeda dengan password Gmail biasa!
 
 **Disimpan di Backend**:
+
 ```javascript
 const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD
-  }
+    pass: process.env.EMAIL_PASSWORD,
+  },
 });
 ```
 
@@ -277,6 +301,7 @@ const transporter = nodemailer.createTransport({
 6. Copy **Client ID**
 
 **Contoh Nilai**:
+
 ```
 123456789-abcdefghijklmnopqrstuvwxyz.apps.googleusercontent.com
 ```
@@ -292,6 +317,7 @@ const transporter = nodemailer.createTransport({
 Dari tahap yang sama seperti CLIENT_ID, copy **Client Secret**
 
 **Contoh Nilai**:
+
 ```
 GOCSPX-abcdefghijklmnopqrst1234567890
 ```
@@ -303,9 +329,11 @@ GOCSPX-abcdefghijklmnopqrst1234567890
 ## 📋 Checklist Set Environment Variables
 
 ### Frontend (Vercel Project: evalify)
+
 - [ ] `VITE_API_GATEWAY` = `https://evalify-backend.vercel.app`
 
 ### Backend (Vercel Project: evalify-backend)
+
 - [ ] `NODE_ENV` = `production`
 - [ ] `SUPABASE_URL` = [dari Supabase]
 - [ ] `SUPABASE_ANON_KEY` = [dari Supabase]

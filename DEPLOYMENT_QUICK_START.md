@@ -3,6 +3,7 @@
 ## Langkah-Langkah Cepat
 
 ### 1️⃣ Push ke GitHub
+
 ```bash
 git add .
 git commit -m "Preparation for Vercel deployment"
@@ -10,6 +11,7 @@ git push origin main
 ```
 
 ### 2️⃣ Deploy Frontend
+
 1. Buka [vercel.com/dashboard](https://vercel.com/dashboard)
 2. Klik **Add New → Project**
 3. Pilih repository **evalify**
@@ -18,6 +20,7 @@ git push origin main
 6. Copy URL yang dihasilkan (misal: `https://evalify.vercel.app`)
 
 ### 3️⃣ Deploy Backend
+
 1. Di Vercel Dashboard, klik **Add New → Project** lagi
 2. Pilih repository **evalify** (untuk backend)
 3. **Root Directory**: `backend`
@@ -26,7 +29,9 @@ git push origin main
 6. Copy URL yang dihasilkan (misal: `https://evalify-backend.vercel.app`)
 
 ### 4️⃣ Set Environment Variables - Frontend
+
 Di project Frontend:
+
 1. **Settings → Environment Variables**
 2. Tambah:
    ```
@@ -35,7 +40,9 @@ Di project Frontend:
 3. **Save** → **Deployments → Redeploy Latest** ✅
 
 ### 5️⃣ Set Environment Variables - Backend
+
 Di project Backend:
+
 1. **Settings → Environment Variables**
 2. Tambah semua:
    ```
@@ -54,11 +61,12 @@ Di project Backend:
 3. **Save** → **Deployments → Redeploy Latest** ✅
 
 ### 6️⃣ Verifikasi
+
 ```
 Frontend: https://evalify.vercel.app (buka di browser)
 Backend: https://evalify-backend.vercel.app (should return JSON)
 ```
 
-## ✨ Done! 
+## ✨ Done!
 
 Jika ada error, baca [VERCEL_DEPLOYMENT_GUIDE.md](./VERCEL_DEPLOYMENT_GUIDE.md) untuk troubleshooting lengkap.

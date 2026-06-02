@@ -1,6 +1,7 @@
 # 📘 Tutorial Deployment Evalify ke Vercel - Panduan Lengkap
 
 ## 📋 Daftar Isi
+
 1. [Prasyarat](#prasyarat)
 2. [Tahap 1: Persiapan Awal](#tahap-1-persiapan-awal)
 3. [Tahap 2: Deploy Frontend ke Vercel](#tahap-2-deploy-frontend-ke-vercel)
@@ -89,8 +90,8 @@ Buat file `frontend/vercel.json`:
 Jika diperlukan, update `frontend/vite.config.js`:
 
 ```javascript
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
@@ -103,8 +104,8 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false,
     minify: 'terser',
-  }
-})
+  },
+});
 ```
 
 ### 2.3 Deploy via GitHub
@@ -134,11 +135,13 @@ vercel
 ### 2.4 Verifikasi Frontend Deployment
 
 Setelah deployment selesai, Anda akan mendapat URL seperti:
+
 ```
 https://evalify.vercel.app
 ```
 
 Buka di browser dan verifikasi:
+
 - ✅ Halaman loading dengan baik
 - ✅ Tidak ada error di console (F12 → Console)
 - ✅ Styling CSS berfungsi
@@ -204,11 +207,7 @@ async function pingService(url) {
 }
 
 app.get('/', async (req, res) => {
-  const [cvScoringStatus, cvNerStatus, interviewStatus] = await Promise.all([
-    pingService(`${CV_SCORING_API}/`),
-    pingService(`${CV_NER_API}/`),
-    pingService(`${INTERVIEW_API}/`)
-  ]);
+  const [cvScoringStatus, cvNerStatus, interviewStatus] = await Promise.all([pingService(`${CV_SCORING_API}/`), pingService(`${CV_NER_API}/`), pingService(`${INTERVIEW_API}/`)]);
 
   res.json({
     service: 'Evalify Express Gateway',
@@ -217,7 +216,7 @@ app.get('/', async (req, res) => {
       cvScoring: cvScoringStatus,
       cvNer: cvNerStatus,
       interview: interviewStatus,
-    }
+    },
   });
 });
 
@@ -320,16 +319,19 @@ Buat file `backend/vercel.json`:
 ### 3.4 Verifikasi Backend Deployment
 
 Setelah deployment, Anda akan mendapat URL seperti:
+
 ```
 https://evalify-backend.vercel.app
 ```
 
 Test dengan membuka di browser:
+
 ```
 https://evalify-backend.vercel.app/
 ```
 
 Seharusnya menampilkan JSON response seperti:
+
 ```json
 {
   "service": "Evalify Express Gateway",
@@ -360,37 +362,40 @@ Klik **"Add"** setelah setiap variable.
 
 Di Vercel Backend Project, buka **Settings** → **Environment Variables**:
 
-| Variable | Value | Keterangan |
-|----------|-------|-----------|
-| `NODE_ENV` | `production` | Production environment |
-| `PORT` | `3000` | Port (Vercel akan mengatur ini) |
-| `SUPABASE_URL` | `https://xxxxx.supabase.co` | URL Supabase project |
-| `SUPABASE_ANON_KEY` | `your-anon-key` | Anon key dari Supabase |
-| `SUPABASE_SERVICE_KEY` | `your-service-key` | Service role key Supabase |
-| `JWT_SECRET` | `your-secret-key` | Secret untuk JWT token |
-| `CV_SCORING_API_URL` | `https://...railway.app` | URL CV Scoring API |
-| `CV_NER_API_URL` | `https://...railway.app` | URL CV NER API |
-| `INTERVIEW_API_URL` | `https://...railway.app` | URL Interview API |
-| `ALLOWED_ORIGINS` | `https://evalify.vercel.app,http://localhost:5173` | CORS origins |
-| `EMAIL_USER` | `your-email@gmail.com` | Email untuk nodemailer |
-| `EMAIL_PASSWORD` | `your-app-password` | App password untuk email |
-| `GOOGLE_CLIENT_ID` | `your-client-id` | (Jika pakai OAuth) |
-| `GOOGLE_CLIENT_SECRET` | `your-client-secret` | (Jika pakai OAuth) |
+| Variable               | Value                                              | Keterangan                      |
+| ---------------------- | -------------------------------------------------- | ------------------------------- |
+| `NODE_ENV`             | `production`                                       | Production environment          |
+| `PORT`                 | `3000`                                             | Port (Vercel akan mengatur ini) |
+| `SUPABASE_URL`         | `https://xxxxx.supabase.co`                        | URL Supabase project            |
+| `SUPABASE_ANON_KEY`    | `your-anon-key`                                    | Anon key dari Supabase          |
+| `SUPABASE_SERVICE_KEY` | `your-service-key`                                 | Service role key Supabase       |
+| `JWT_SECRET`           | `your-secret-key`                                  | Secret untuk JWT token          |
+| `CV_SCORING_API_URL`   | `https://...railway.app`                           | URL CV Scoring API              |
+| `CV_NER_API_URL`       | `https://...railway.app`                           | URL CV NER API                  |
+| `INTERVIEW_API_URL`    | `https://...railway.app`                           | URL Interview API               |
+| `ALLOWED_ORIGINS`      | `https://evalify.vercel.app,http://localhost:5173` | CORS origins                    |
+| `EMAIL_USER`           | `your-email@gmail.com`                             | Email untuk nodemailer          |
+| `EMAIL_PASSWORD`       | `your-app-password`                                | App password untuk email        |
+| `GOOGLE_CLIENT_ID`     | `your-client-id`                                   | (Jika pakai OAuth)              |
+| `GOOGLE_CLIENT_SECRET` | `your-client-secret`                               | (Jika pakai OAuth)              |
 
 ### 4.3 Cara Mendapatkan Environment Variables
 
 **Supabase:**
+
 1. Login ke [https://app.supabase.com](https://app.supabase.com)
 2. Pilih project Anda
 3. Buka **Settings** → **API**
 4. Copy `Project URL` dan `anon public key`
 
 **JWT Secret (Buat sendiri):**
+
 ```bash
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
 **Email Password (Gmail):**
+
 1. Buka [https://myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords)
 2. Pilih Mail dan Windows
 3. Copy password yang dihasilkan
@@ -443,11 +448,13 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 **Solusi:**
 
 1. Check environment variable di Vercel:
+
    ```
    VITE_API_GATEWAY = https://evalify-backend.vercel.app
    ```
 
 2. Pastikan Backend CORS configuration benar:
+
    ```javascript
    const allowedOrigins = ['https://evalify.vercel.app', 'http://localhost:5173'];
    app.use(cors({ origin: allowedOrigins, credentials: true }));
