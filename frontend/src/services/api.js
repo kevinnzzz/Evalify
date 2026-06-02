@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { mockRoles } from '../data/mockData';
 
-const API_BASE = import.meta.env.VITE_API_GATEWAY || 'http://localhost:3000';
+// For production: VITE_API_GATEWAY must be set in Vercel (or uses backend URL)
+const API_BASE = import.meta.env.VITE_API_GATEWAY || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://evalify-backend.vercel.app');
 
 // Base Axios instance
 const api = axios.create({
@@ -64,12 +65,13 @@ export const interviewService = {
     api.post('/interview/analyze', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
       timeout: 120000,
-    }),  // Alias untuk compatibility dengan frontend
+    }), // Alias untuk compatibility dengan frontend
   analyze: (formData) =>
     api.post('/interview/analyze', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
       timeout: 120000,
-    }),  getSessions: () => api.get('/interview/sessions'),
+    }),
+  getSessions: () => api.get('/interview/sessions'),
   getSession: (id) => api.get(`/interview/sessions/${id}`),
 };
 

@@ -22,7 +22,8 @@ const CV_NER_API = process.env.CV_NER_API_URL || 'https://evalifycvevaluationsco
 const INTERVIEW_API = process.env.INTERVIEW_API_URL || 'https://ai-interview-simulation-production.up.railway.app';
 
 // ─── CORS origins ──────────────────────────────────────────────────────────────
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:5173,http://127.0.0.1:5173').split(',');
+const defaultOrigins = process.env.NODE_ENV === 'production' ? 'https://evalifyevalifycareersolution.vercel.app' : 'http://localhost:5173,http://127.0.0.1:5173';
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || defaultOrigins).split(',').map((o) => o.trim());
 
 // ─── Middleware ────────────────────────────────────────────────────────────────
 app.use(helmet());
