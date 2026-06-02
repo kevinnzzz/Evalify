@@ -387,7 +387,8 @@ function Contact() {
 
     try {
       const fallbackBase = typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://evalify-backend.vercel.app';
-      const response = await fetch(`${import.meta.env.VITE_API_URL || fallbackBase}/api/contact`, {
+      const baseUrl = import.meta.env.VITE_API_GATEWAY || fallbackBase;
+      const response = await fetch(`${baseUrl}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(contactForm),
