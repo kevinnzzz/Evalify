@@ -413,7 +413,8 @@ function Contact() {
     setContactLoading(true);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/contact`, {
+      const fallbackBase = typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://evalify-backend.vercel.app';
+      const response = await fetch(`${import.meta.env.VITE_API_URL || fallbackBase}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(contactForm),
@@ -523,11 +524,7 @@ function Contact() {
                       />
                     </div>
                     {contactError && <div className='text-xs text-red-500 bg-red-50 p-2 rounded'>{contactError}</div>}
-                    <button
-                      type='submit'
-                      disabled={contactLoading}
-                      className='w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-2.5 rounded-xl text-sm transition-all active:scale-95'
-                    >
+                    <button type='submit' disabled={contactLoading} className='w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-2.5 rounded-xl text-sm transition-all active:scale-95'>
                       {contactLoading ? 'Mengirim...' : 'Kirim Pesan'}
                     </button>
                   </form>

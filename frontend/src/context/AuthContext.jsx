@@ -3,7 +3,7 @@ import { authService } from '../services/api';
 
 const AuthContext = createContext(null);
 
-const API_BASE = import.meta.env.VITE_API_GATEWAY || 'http://localhost:3000';
+const API_BASE = import.meta.env.VITE_API_GATEWAY || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://evalify-backend.vercel.app');
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -97,7 +97,7 @@ export function AuthProvider({ children }) {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${savedToken}`,
+            Authorization: `Bearer ${savedToken}`,
           },
         });
       }

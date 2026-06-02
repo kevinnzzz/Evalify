@@ -28,7 +28,8 @@ export default function ReviewCVPage() {
 
   // Health check backend
   useEffect(() => {
-    const base = (import.meta.env.VITE_API_URL || 'http://localhost:3000/api').replace('/api', '');
+    const fallbackBase = typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : 'https://evalify-backend.vercel.app/api';
+    const base = (import.meta.env.VITE_API_URL || fallbackBase).replace('/api', '');
     fetch(`${base}/`)
       .then((r) => setBackendOnline(r.ok))
       .catch(() => setBackendOnline(false));
@@ -116,7 +117,7 @@ export default function ReviewCVPage() {
       const res = await cvService.review(formData);
       setProgress(80);
       const reviewResult = res.data;
-      
+
       // ✅ Log CV review ke database
       try {
         await userService.logCVReview({
@@ -129,7 +130,7 @@ export default function ReviewCVPage() {
         console.warn('[ReviewCVPage] ⚠️ Failed to log CV review:', logErr?.response?.data || logErr.message);
         // Tetap tampilkan result meski logging gagal
       }
-      
+
       setProgress(100);
       setResult(reviewResult);
       addToast('CV berhasil direview dan disimpan!', 'success');

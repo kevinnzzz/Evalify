@@ -92,7 +92,8 @@ export default function InterviewAIPage() {
 
   // ── Health check backend ──────────────────────────────────────────────────
   useEffect(() => {
-    const base = (import.meta.env.VITE_API_URL || 'http://localhost:3000/api').replace('/api', '');
+    const fallbackBase = typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : 'https://evalify-backend.vercel.app/api';
+    const base = (import.meta.env.VITE_API_URL || fallbackBase).replace('/api', '');
     fetch(`${base}/`)
       .then((r) => setBackendOnline(r.ok))
       .catch(() => setBackendOnline(false));
@@ -115,7 +116,7 @@ export default function InterviewAIPage() {
       if (ttsAbortRef.current && !ttsAbortRef.current.signal.aborted) {
         ttsAbortRef.current.abort();
       }
-      
+
       // Stop and cleanup audio
       if (currentAudioRef.current) {
         currentAudioRef.current.pause();
@@ -124,7 +125,7 @@ export default function InterviewAIPage() {
         }
         currentAudioRef.current = null;
       }
-      
+
       stopMicStream();
       clearInterval(timerRef.current);
     },
@@ -190,7 +191,7 @@ export default function InterviewAIPage() {
   // ── TTS via interviewService (token otomatis) ─────────────────────────────
   const autoPlayTTS = async (text) => {
     if (!text) return;
-    
+
     // Cleanup previous audio if exists
     if (currentAudioRef.current) {
       currentAudioRef.current.pause();
@@ -201,12 +202,12 @@ export default function InterviewAIPage() {
 
     // Create new abort controller for this TTS request
     ttsAbortRef.current = new AbortController();
-    
+
     setTtsLoading(true);
     try {
       // ✅ Pakai interviewService — JWT token disertakan otomatis, responseType blob
       const res = await interviewService.playTTS({ text, language });
-      
+
       // Check if request was aborted (user moved to another question)
       if (ttsAbortRef.current?.signal.aborted) {
         setTtsLoading(false);
@@ -216,19 +217,19 @@ export default function InterviewAIPage() {
       const url = URL.createObjectURL(res.data);
       const audio = new Audio(url);
       currentAudioRef.current = audio;
-      
+
       setTtsPlaying(true);
-      
+
       audio.onended = () => {
         setTtsPlaying(false);
         setTtsLoading(false);
       };
-      
+
       audio.onerror = () => {
         setTtsPlaying(false);
         setTtsLoading(false);
       };
-      
+
       await audio.play();
     } catch (err) {
       // Don't show error if request was aborted (user moved question)
@@ -286,17 +287,17 @@ export default function InterviewAIPage() {
     if (ttsAbortRef.current && !ttsAbortRef.current.signal.aborted) {
       ttsAbortRef.current.abort();
     }
-    
+
     // Stop audio if playing
     if (currentAudioRef.current) {
       currentAudioRef.current.pause();
       currentAudioRef.current = null;
     }
-    
+
     // Reset TTS states immediately when moving to new question
     setTtsPlaying(false);
     setTtsLoading(false);
-    
+
     if (isRecording) stopRecording();
     setCurrentQIdx(idx);
   };
@@ -315,7 +316,7 @@ export default function InterviewAIPage() {
 
     setPhase(PHASE.ANALYZING);
     setAnalyzeError(null);
-    
+
     // Function untuk analyze dengan retry logic
     const performAnalyze = async (retryCount = 0) => {
       try {
@@ -335,7 +336,7 @@ export default function InterviewAIPage() {
         // ✅ Pakai interviewService — JWT token disertakan otomatis via axios interceptor
         const res = await interviewService.analyze(formData);
         setResult(res.data);
-        
+
         // ✅ Log interview ke database
         try {
           await userService.logInterview({
@@ -348,19 +349,19 @@ export default function InterviewAIPage() {
           console.warn('[InterviewPage] ⚠️ Failed to log interview:', logErr?.response?.data || logErr.message);
           // Tetap tampilkan result meski logging gagal
         }
-        
+
         setPhase(PHASE.RESULT);
         setAnalyzeError(null);
         addToast('Analisis selesai!', 'success');
       } catch (err) {
         const status = err.response?.status;
         const msg = err.response?.data?.detail || err.response?.data?.error || err.message;
-        
+
         // Retry untuk 503, 504, timeout, atau connection error
         if ((status === 503 || status === 504 || !status) && retryCount < 3) {
           const delay = Math.pow(2, retryCount) * 2000; // 2s, 4s, 8s
           setAnalyzeError(`Sedang retry (${retryCount + 1}/3)... API sedang overload, tunggu ${Math.ceil(delay / 1000)}s`);
-          await new Promise(resolve => setTimeout(resolve, delay));
+          await new Promise((resolve) => setTimeout(resolve, delay));
           return performAnalyze(retryCount + 1);
         }
 
@@ -557,7 +558,11 @@ export default function InterviewAIPage() {
           <div className='bg-white/5 rounded-xl p-4'>
             <p className='text-white/60 text-xs mb-3 text-center font-semibold uppercase tracking-wider'>Rekam Jawaban</p>
             <div className='flex items-center justify-center gap-4'>
-              <button onClick={() => goTo(Math.max(0, currentQIdx - 1))} disabled={currentQIdx === 0 || ttsPlaying} className='text-xs text-white/60 hover:text-white border border-white/20 px-3 py-1.5 rounded-lg transition-colors disabled:opacity-30'>
+              <button
+                onClick={() => goTo(Math.max(0, currentQIdx - 1))}
+                disabled={currentQIdx === 0 || ttsPlaying}
+                className='text-xs text-white/60 hover:text-white border border-white/20 px-3 py-1.5 rounded-lg transition-colors disabled:opacity-30'
+              >
                 ← Prev
               </button>
 
@@ -606,10 +611,7 @@ export default function InterviewAIPage() {
               <p className='text-white font-bold text-lg'>Analisis Gagal</p>
               <p className='text-white/80 text-sm text-center max-w-xs'>{analyzeError}</p>
               <div className='flex gap-2'>
-                <button
-                  onClick={handleEnd}
-                  className='bg-white/20 hover:bg-white/30 text-white px-6 py-2 rounded-lg font-semibold transition-colors'
-                >
+                <button onClick={handleEnd} className='bg-white/20 hover:bg-white/30 text-white px-6 py-2 rounded-lg font-semibold transition-colors'>
                   Coba Ulang
                 </button>
                 <button
@@ -635,9 +637,7 @@ export default function InterviewAIPage() {
               </div>
             </div>
           )}
-          {!analyzeError && [1, 2, 3].map((i) => (
-            <Skeleton key={i} className='h-32 w-full' />
-          ))}
+          {!analyzeError && [1, 2, 3].map((i) => <Skeleton key={i} className='h-32 w-full' />)}
         </div>
       )}
 
@@ -727,10 +727,24 @@ export default function InterviewAIPage() {
                       {/* Score breakdown */}
                       <div className='flex items-center gap-4 text-xs text-gray-500 mb-3'>
                         <span>
-                          Content: <strong className='text-gray-700 dark:text-gray-300'>{Math.round((typeof (item.score_breakdown?.content_score || item.content_score) === 'number' && !isNaN(item.score_breakdown?.content_score || item.content_score) ? (item.score_breakdown?.content_score || item.content_score) : 0) || 0)}</strong>
+                          Content:{' '}
+                          <strong className='text-gray-700 dark:text-gray-300'>
+                            {Math.round(
+                              (typeof (item.score_breakdown?.content_score || item.content_score) === 'number' && !isNaN(item.score_breakdown?.content_score || item.content_score)
+                                ? item.score_breakdown?.content_score || item.content_score
+                                : 0) || 0,
+                            )}
+                          </strong>
                         </span>
                         <span>
-                          Delivery: <strong className='text-gray-700 dark:text-gray-300'>{Math.round((typeof (item.score_breakdown?.delivery_score || item.delivery_score) === 'number' && !isNaN(item.score_breakdown?.delivery_score || item.delivery_score) ? (item.score_breakdown?.delivery_score || item.delivery_score) : 0) || 0)}</strong>
+                          Delivery:{' '}
+                          <strong className='text-gray-700 dark:text-gray-300'>
+                            {Math.round(
+                              (typeof (item.score_breakdown?.delivery_score || item.delivery_score) === 'number' && !isNaN(item.score_breakdown?.delivery_score || item.delivery_score)
+                                ? item.score_breakdown?.delivery_score || item.delivery_score
+                                : 0) || 0,
+                            )}
+                          </strong>
                         </span>
                         <span className='text-gray-300 dark:text-gray-600'>70% + 30%</span>
                       </div>
