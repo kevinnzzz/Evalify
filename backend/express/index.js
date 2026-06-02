@@ -22,12 +22,27 @@ const CV_NER_API = process.env.CV_NER_API_URL || 'https://evalifycvevaluationsco
 const INTERVIEW_API = process.env.INTERVIEW_API_URL || 'https://ai-interview-simulation-production.up.railway.app';
 
 // ─── CORS origins ──────────────────────────────────────────────────────────────
-const defaultOrigins = process.env.NODE_ENV === 'production' ? 'https://evalifyevalifycareersolution.vercel.app' : 'http://localhost:5173,http://127.0.0.1:5173';
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || defaultOrigins).split(',').map((o) => o.trim());
+const isProduction = process.env.VERCEL || process.env.NODE_ENV === 'production';
+const defaultOrigins = isProduction 
+  ? 'https://evalifyevalifycareersolution.vercel.app'
+  : 'http://localhost:5173,http://127.0.0.1:5173';
+
+const rawOrigins = process.env.ALLOWED_ORIGINS || defaultOrigins;
+const allowedOrigins = rawOrigins
+  .split(',')
+  .map((o) => o.trim())
+  .filter((o) => o.length > 0);
+
+console.log('🔐 CORS Config:', { isProduction, allowedOrigins, rawOrigins });
 
 // ─── Middleware ────────────────────────────────────────────────────────────────
 app.use(helmet());
-app.use(cors({ origin: allowedOrigins, credentials: true }));
+app.use(cors({ 
+  origin: allowedOrigins, 
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
