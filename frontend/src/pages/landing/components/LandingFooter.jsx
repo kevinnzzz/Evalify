@@ -3,6 +3,11 @@ import { BrainCircuit } from 'lucide-react';
 
 export default function LandingFooter() {
   const links = ['Home', 'Tentang', 'Solusi Kami', 'FAQ'];
+  const services = [
+    { name: 'CV Review', path: '/CVReviewLandingPage' },
+    { name: 'Simulasi Interview', path: '/InterviewLandingPage' }
+  ];
+
   return (
     <footer className='bg-gray-900 text-gray-400 py-12'>
       <div className='max-w-6xl mx-auto px-6'>
@@ -15,6 +20,18 @@ export default function LandingFooter() {
                   <a href='#' className='text-sm hover:text-white transition-colors'>
                     {l}
                   </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <div className='text-xs font-semibold uppercase tracking-wide text-gray-500 mb-3'>Layanan</div>
+            <ul className='space-y-2'>
+              {services.map((service) => (
+                <li key={service.name}>
+                  <Link to={service.path} className='text-sm hover:text-white transition-colors'>
+                    {service.name}
+                  </Link>
                 </li>
               ))}
             </ul>
