@@ -69,6 +69,7 @@ router.post('/question-tts', authenticate, async (req, res) => {
   try {
     const text = (req.body.text || '').trim();
     const language = req.body.language || 'en';
+    const speaker = req.body.speaker || 'professional_male'; // Default to professional male voice
 
     if (!text) {
       return res.status(400).json({ error: 'Field "text" wajib diisi.' });
@@ -77,6 +78,7 @@ router.post('/question-tts', authenticate, async (req, res) => {
     const form = new FormData();
     form.append('text', text);
     form.append('language', language);
+    form.append('speaker', speaker);
 
     const response = await axios.post(`${INTERVIEW_API}/ai/interview/question-tts`, form, {
       headers: form.getHeaders(),

@@ -206,7 +206,8 @@ export default function InterviewAIPage() {
     setTtsLoading(true);
     try {
       // ✅ Pakai interviewService — JWT token disertakan otomatis, responseType blob
-      const res = await interviewService.playTTS({ text, language });
+      // Gunakan voice profesional laki-laki untuk interviewer
+      const res = await interviewService.playTTS({ text, language, speaker: 'professional_male' });
 
       // Check if request was aborted (user moved to another question)
       if (ttsAbortRef.current?.signal.aborted) {
