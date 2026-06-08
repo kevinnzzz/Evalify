@@ -27,7 +27,10 @@ export default function LandingNavbar() {
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled || mobileMenuOpen ? 'bg-white/95 backdrop-blur-sm shadow-sm' : 'bg-transparent'}`}>
       <div className='max-w-6xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between'>
         <Link to='/' className='flex items-center gap-2'>
-          <span className='font-bold text-xl text-blue-600' style={{ fontFamily: 'Syne, sans-serif' }}>
+          <div className='w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center'>
+            <BrainCircuit size={18} className='text-white' />
+          </div>
+          <span className='font-bold text-xl text-gray-900' style={{ fontFamily: 'Syne, sans-serif' }}>
             Evalify
           </span>
         </Link>
