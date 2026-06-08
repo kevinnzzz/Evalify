@@ -52,6 +52,18 @@ function Hero() {
               Cara kerja <ChevronRight size={15} />
             </a>
           </div>
+          <div className='flex justify-center gap-3'>
+            {[
+              ['1000+', 'CV Telah Direview'],
+              ['95%', 'Kepuasan User'],
+              ['50+', 'Posisi Pekerjaan'],
+            ].map(([v, l]) => (
+              <div key={l} className='text-center'>
+                <div className='text-lg font-bold text-gray-900'>{v}</div>
+                <div className='text-xs text-gray-500'>{l}</div>
+              </div>
+            ))}
+          </div>
         </motion.div>
 
         {/* Desktop: Left side text */}
@@ -75,6 +87,18 @@ function Hero() {
             <a href='#steps' className='text-gray-600 hover:text-blue-600 font-medium text-sm transition-colors flex items-center gap-1'>
               Cara kerja <ChevronRight size={15} />
             </a>
+          </div>
+          <div className='flex items-center gap-6 mt-10'>
+            {[
+              ['1000+', 'CV Telah Direview'],
+              ['95%', 'Kepuasan User'],
+              ['50+', 'Posisi Pekerjaan'],
+            ].map(([v, l]) => (
+              <div key={l}>
+                <div className='text-xl font-bold text-gray-900'>{v}</div>
+                <div className='text-xs text-gray-500'>{l}</div>
+              </div>
+            ))}
           </div>
         </motion.div>
 
