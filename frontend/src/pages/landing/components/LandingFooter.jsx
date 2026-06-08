@@ -11,7 +11,7 @@ export default function LandingFooter() {
   return (
     <footer className='bg-gray-900 text-gray-400 py-12'>
       <div className='max-w-6xl mx-auto px-6'>
-        <div className='flex justify-between items-start mb-10'>
+        <div className='flex justify-evenly mb-10'>
           <div>
             <div className='text-xs font-semibold uppercase tracking-wide text-gray-500 mb-3'>Quick Links</div>
             <ul className='space-y-2'>
