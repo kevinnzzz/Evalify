@@ -5,7 +5,7 @@ export default function LandingFooter() {
   const links = ['Home', 'Tentang', 'Solusi Kami', 'FAQ'];
   const services = [
     { name: 'CV Review', path: '/CVReviewLandingPage' },
-    { name: 'Simulasi Interview', path: '/InterviewLandingPage' }
+    { name: 'Simulasi Interview', path: '/InterviewLandingPage' },
   ];
 
   return (

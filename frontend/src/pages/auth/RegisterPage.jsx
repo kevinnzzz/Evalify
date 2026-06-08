@@ -72,10 +72,10 @@ export default function RegisterPage() {
             </div>
             <span className='font-display text-3xl font-extrabold'>Evalify</span>
           </Link>
-          <h2 className='text-2xl font-bold mb-3 leading-snug'>Start your AI career journey today</h2>
-          <p className='text-blue-200 text-sm mb-6'>Join thousands of job seekers who improved their career prospects with Evalify.</p>
+          <h2 className='text-2xl font-bold mb-3 leading-snug'>Mulai perjalanan karir AI Anda hari ini</h2>
+          <p className='text-blue-200 text-sm mb-6'>Bergabunglah dengan ribuan pencari kerja yang meningkatkan prospek karir mereka dengan Evalify.</p>
           <ul className='space-y-2 text-sm text-blue-100'>
-            {['AI-powered CV analysis', 'Mock interview simulation', 'Personalized career feedback', 'Smart job matching'].map((item) => (
+            {['Analisis CV bertenaga AI', 'Simulasi wawancara langsung', 'Umpan balik karir yang dipersonalisasi', 'Pencocokan pekerjaan pintar'].map((item) => (
               <li key={item} className='flex items-center gap-2'>
                 <span className='w-1.5 h-1.5 rounded-full bg-green-300 flex-shrink-0' />
                 {item}
@@ -91,31 +91,31 @@ export default function RegisterPage() {
             <span className='font-display text-2xl font-extrabold text-blue-600'>Evalify</span>
           </Link>
 
-          <h1 className='text-2xl font-bold text-gray-800 dark:text-white mb-1'>Sign Up Your Account</h1>
-          <p className='text-sm text-gray-400 mb-6'>Create your free account in seconds.</p>
+          <h1 className='text-2xl font-bold text-gray-800 dark:text-white mb-1'>Daftar Akun Anda</h1>
+          <p className='text-sm text-gray-400 mb-6'>Buat akun gratis Anda dalam hitungan detik.</p>
 
           <form onSubmit={handleSubmit} className='space-y-3'>
             <div className='grid grid-cols-2 gap-3'>
-              <Input name='fullName' placeholder='Full Name' icon={User} value={form.fullName} onChange={handleChange} error={errors.fullName} />
-              <Input name='username' placeholder='Username' icon={User} value={form.username} onChange={handleChange} error={errors.username} />
-              <Input name='password' type='password' placeholder='Password' icon={Lock} value={form.password} onChange={handleChange} error={errors.password} />
-              <Input name='confirmPassword' type='password' placeholder='Confirm Password' icon={Lock} value={form.confirmPassword} onChange={handleChange} error={errors.confirmPassword} />
+              <Input name='fullName' placeholder='Nama Lengkap' icon={User} value={form.fullName} onChange={handleChange} error={errors.fullName} />
+              <Input name='username' placeholder='Nama Pengguna' icon={User} value={form.username} onChange={handleChange} error={errors.username} />
+              <Input name='password' type='password' placeholder='Kata Sandi' icon={Lock} value={form.password} onChange={handleChange} error={errors.password} />
+              <Input name='confirmPassword' type='password' placeholder='Konfirmasi Kata Sandi' icon={Lock} value={form.confirmPassword} onChange={handleChange} error={errors.confirmPassword} />
             </div>
             <Input name='email' type='email' placeholder='Email' icon={Mail} value={form.email} onChange={handleChange} error={errors.email} />
 
             <Button type='submit' fullWidth loading={loading} size='lg'>
-              Sign Up
+              Daftar
             </Button>
           </form>
 
           <p className='text-center text-sm text-gray-400 mt-4'>
-            Already have an account?{' '}
+            Sudah punya akun?{' '}
             <Link to='/login' className='text-blue-600 font-semibold hover:underline'>
-              Sign In
+              Masuk
             </Link>
           </p>
 
-          <p className='text-xs text-gray-400 mt-6 text-center leading-relaxed'>By signing up, you agree to the Terms of Service and acknowledge you've read our Privacy Policy.</p>
+          <p className='text-xs text-gray-400 mt-6 text-center leading-relaxed'>Dengan mendaftar, Anda setuju dengan Persyaratan Layanan dan mengakui telah membaca Kebijakan Privasi kami.</p>
         </div>
       </div>
     </div>
