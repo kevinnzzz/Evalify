@@ -1,10 +1,12 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { authService } from '../services/api';
 
 const AuthContext = createContext(null);
 
-// API Gateway URL - matches services/api.js
-const API_BASE = import.meta.env.VITE_API_GATEWAY || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://evalify-backend.vercel.app');
+const API_BASE =
+  import.meta.env.VITE_API_GATEWAY ||
+  (typeof window !== 'undefined' && window.location.hostname === 'localhost'
+    ? 'http://localhost:3000'
+    : 'https://evalify-backend.vercel.app');
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -12,7 +14,6 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(null);
 
   useEffect(() => {
-    // Check localStorage for saved user session & token
     const savedUser = localStorage.getItem('evalify_user');
     const savedToken = localStorage.getItem('evalify_token');
     if (savedUser && savedToken) {
@@ -22,72 +23,73 @@ export function AuthProvider({ children }) {
     setLoading(false);
   }, []);
 
+  /**
+   * login – Kirim credentials, simpan user + token, return userObj.
+   * Caller (LoginPage) menggunakan return value untuk redirect by role.
+   */
   const login = async (credentials) => {
-    try {
-      const response = await fetch(`${API_BASE}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(credentials),
-      });
+    const response = await fetch(`${API_BASE}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(credentials),
+    });
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Login gagal');
-      }
-
-      const data = await response.json();
-      const userObj = {
-        id: data.user.id,
-        fullName: data.user.fullName,
-        username: data.user.username,
-        email: data.user.email,
-        avatar_url: data.user.avatar_url,
-        role: 'Job Seeker',
-      };
-
-      setUser(userObj);
-      setToken(data.token);
-      localStorage.setItem('evalify_user', JSON.stringify(userObj));
-      localStorage.setItem('evalify_token', data.token);
-
-      return userObj;
-    } catch (err) {
-      throw err;
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Login gagal');
     }
+
+    const data = await response.json();
+
+    const userObj = {
+      id: data.user.id,
+      fullName: data.user.fullName,
+      username: data.user.username,
+      email: data.user.email,
+      avatar_url: data.user.avatar_url,
+      // Gunakan role dari API (kolom baru di DB), fallback 'user'
+      role: data.user.role || 'user',
+      status: data.user.status || 'active',
+    };
+
+    setUser(userObj);
+    setToken(data.token);
+    localStorage.setItem('evalify_user', JSON.stringify(userObj));
+    localStorage.setItem('evalify_token', data.token);
+
+    // Return userObj agar LoginPage bisa redirect berdasarkan role
+    return userObj;
   };
 
   const register = async (userData) => {
-    try {
-      const response = await fetch(`${API_BASE}/api/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData),
-      });
+    const response = await fetch(`${API_BASE}/api/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userData),
+    });
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Registrasi gagal');
-      }
-
-      const data = await response.json();
-      const userObj = {
-        id: data.user.id,
-        fullName: data.user.fullName,
-        username: data.user.username,
-        email: data.user.email,
-        avatar_url: data.user.avatar_url,
-        role: 'Job Seeker',
-      };
-
-      setUser(userObj);
-      setToken(data.token);
-      localStorage.setItem('evalify_user', JSON.stringify(userObj));
-      localStorage.setItem('evalify_token', data.token);
-
-      return userObj;
-    } catch (err) {
-      throw err;
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Registrasi gagal');
     }
+
+    const data = await response.json();
+    const userObj = {
+      id: data.user.id,
+      fullName: data.user.fullName,
+      username: data.user.username,
+      email: data.user.email,
+      avatar_url: data.user.avatar_url,
+      role: data.user.role || 'user',
+      status: data.user.status || 'active',
+    };
+
+    setUser(userObj);
+    setToken(data.token);
+    localStorage.setItem('evalify_user', JSON.stringify(userObj));
+    localStorage.setItem('evalify_token', data.token);
+
+    return userObj;
   };
 
   const logout = async () => {
@@ -118,7 +120,11 @@ export function AuthProvider({ children }) {
     localStorage.setItem('evalify_user', JSON.stringify(updated));
   };
 
-  return <AuthContext.Provider value={{ user, loading, token, login, register, logout, updateUser }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, loading, token, login, register, logout, updateUser }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {

@@ -8,7 +8,13 @@ const { authenticate, JWT_SECRET } = require('../middleware/auth');
 const router = express.Router();
 const TOKEN_EXPIRES = '7d';
 
+<<<<<<< HEAD
 // ─── POST /api/auth/register ──────────────────────────────────────────────────
+=======
+// ─────────────────────────────────────────────────────────────
+// POST /api/auth/register
+// ─────────────────────────────────────────────────────────────
+>>>>>>> 5481a8a (Add admin dashboard and authentication improvements)
 router.post('/register', async (req, res) => {
   const { full_name, username, email, password } = req.body;
 
@@ -19,7 +25,6 @@ router.post('/register', async (req, res) => {
     return res.status(400).json({ error: 'Password minimal 6 karakter.' });
   }
 
-  // Check duplicate email
   const { data: existingEmail } = await supabase
     .from('users')
     .select('id')
@@ -30,7 +35,6 @@ router.post('/register', async (req, res) => {
     return res.status(409).json({ error: 'Email sudah digunakan.' });
   }
 
-  // Check duplicate username
   const { data: existingUsername } = await supabase
     .from('users')
     .select('id')
@@ -46,7 +50,7 @@ router.post('/register', async (req, res) => {
   const { data: user, error } = await supabase
     .from('users')
     .insert({ full_name, usernama: username, email, password_hash })
-    .select('id, full_name, usernama, email, avatar_url, created_at')
+    .select('id, full_name, usernama, email, avatar_url, role, status, created_at')
     .single();
 
   if (error) {
@@ -54,9 +58,12 @@ router.post('/register', async (req, res) => {
     return res.status(500).json({ error: 'Gagal membuat akun.' });
   }
 
-  const token = jwt.sign({ sub: user.id, username: user.usernama, email: user.email }, JWT_SECRET, {
-    expiresIn: TOKEN_EXPIRES,
-  });
+  // JWT sekarang menyertakan role
+  const token = jwt.sign(
+    { sub: user.id, username: user.usernama, email: user.email, role: user.role },
+    JWT_SECRET,
+    { expiresIn: TOKEN_EXPIRES }
+  );
 
   await supabase.from('sessions').insert({
     user_id: user.id,
@@ -79,11 +86,19 @@ router.post('/register', async (req, res) => {
       username: user.usernama,
       email: user.email,
       avatar_url: user.avatar_url,
+      role: user.role,
+      status: user.status,
     },
   });
 });
 
+<<<<<<< HEAD
 // ─── POST /api/auth/login ─────────────────────────────────────────────────────
+=======
+// ─────────────────────────────────────────────────────────────
+// POST /api/auth/login
+// ─────────────────────────────────────────────────────────────
+>>>>>>> 5481a8a (Add admin dashboard and authentication improvements)
 router.post('/login', async (req, res) => {
   const { email, username, password } = req.body;
 
@@ -93,11 +108,9 @@ router.post('/login', async (req, res) => {
 
   let query = supabase
     .from('users')
-    .select('id, full_name, usernama, email, password_hash, avatar_url');
+    .select('id, full_name, usernama, email, password_hash, avatar_url, role, status');
 
-  // Support login dengan email atau username
   if (email) {
-    // Cek apakah input adalah email (berisi @) atau username
     if (email.includes('@')) {
       query = query.eq('email', email);
     } else {
@@ -113,13 +126,19 @@ router.post('/login', async (req, res) => {
     return res.status(401).json({ error: 'Email/username atau password salah.' });
   }
 
+  // Cek status akun
+  if (user.status === 'suspended') {
+    return res.status(403).json({ error: 'Akun Anda telah disuspend. Hubungi administrator.' });
+  }
+
   const valid = await bcrypt.compare(password, user.password_hash);
   if (!valid) {
     return res.status(401).json({ error: 'Email/username atau password salah.' });
   }
 
+  // JWT menyertakan role untuk RBAC
   const token = jwt.sign(
-    { sub: user.id, username: user.usernama, email: user.email },
+    { sub: user.id, username: user.usernama, email: user.email, role: user.role },
     JWT_SECRET,
     { expiresIn: TOKEN_EXPIRES }
   );
@@ -145,22 +164,36 @@ router.post('/login', async (req, res) => {
       username: user.usernama,
       email: user.email,
       avatar_url: user.avatar_url,
+      role: user.role,
+      status: user.status,
     },
   });
 });
 
+<<<<<<< HEAD
 // ─── POST /api/auth/logout ────────────────────────────────────────────────────
+=======
+// ─────────────────────────────────────────────────────────────
+// POST /api/auth/logout
+// ─────────────────────────────────────────────────────────────
+>>>>>>> 5481a8a (Add admin dashboard and authentication improvements)
 router.post('/logout', authenticate, async (req, res) => {
   const token = req.headers.authorization?.slice(7);
   await supabase.from('sessions').delete().eq('token', token);
   res.json({ message: 'Logout berhasil.' });
 });
 
+<<<<<<< HEAD
 // ─── GET /api/auth/me ─────────────────────────────────────────────────────────
+=======
+// ─────────────────────────────────────────────────────────────
+// GET /api/auth/me
+// ─────────────────────────────────────────────────────────────
+>>>>>>> 5481a8a (Add admin dashboard and authentication improvements)
 router.get('/me', authenticate, async (req, res) => {
   const { data: user, error } = await supabase
     .from('users')
-    .select('id, full_name, usernama, email, avatar_url, created_at, updated_at')
+    .select('id, full_name, usernama, email, avatar_url, role, status, created_at, updated_at')
     .eq('id', req.user.sub)
     .single();
 
@@ -174,11 +207,19 @@ router.get('/me', authenticate, async (req, res) => {
     username: user.usernama,
     email: user.email,
     avatar_url: user.avatar_url,
+    role: user.role,
+    status: user.status,
     created_at: user.created_at,
   });
 });
 
+<<<<<<< HEAD
 // ─── PATCH /api/auth/profile ──────────────────────────────────────────────────
+=======
+// ─────────────────────────────────────────────────────────────
+// PATCH /api/auth/profile
+// ─────────────────────────────────────────────────────────────
+>>>>>>> 5481a8a (Add admin dashboard and authentication improvements)
 router.patch('/profile', authenticate, async (req, res) => {
   const allowed = ['full_name', 'avatar_url'];
   const updates = {};
@@ -191,7 +232,7 @@ router.patch('/profile', authenticate, async (req, res) => {
     .from('users')
     .update(updates)
     .eq('id', req.user.sub)
-    .select('id, full_name, usernama, email, avatar_url')
+    .select('id, full_name, usernama, email, avatar_url, role, status')
     .single();
 
   if (error) return res.status(500).json({ error: 'Gagal update profil.' });

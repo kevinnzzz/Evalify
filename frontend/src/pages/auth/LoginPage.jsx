@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Lock, BrainCircuit } from 'lucide-react';
-import { motion } from 'framer-motion';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import { useAuth } from '../../context/AuthContext';
@@ -36,14 +35,19 @@ export default function LoginPage() {
     setLoading(true);
     try {
       // Kirim sebagai 'email' — backend akan cek apakah itu email atau username
-      const loginPayload = {
+      const user = await login({
         email: form.identifier,
         password: form.password,
-      };
+      });
 
-      await login(loginPayload);
       addToast('Welcome back!', 'success');
-      navigate('/dashboard');
+
+      // Redirect berdasarkan role
+      if (user.role === 'admin') {
+        navigate('/admin/dashboard', { replace: true });
+      } else {
+        navigate('/dashboard', { replace: true });
+      }
     } catch (err) {
       addToast(err.message || 'Login gagal', 'error');
       setErrors({ password: err.message });
@@ -70,14 +74,17 @@ export default function LoginPage() {
             Tenang aja ada <strong className="text-white">Evalify</strong>
           </p>
           <ul className="space-y-2 text-sm text-blue-100">
-            {['membantu pengecekan resume', 'memberikan feedback', 'membantu latihan interview', 'tersedia job matching'].map(
-              (item) => (
-                <li key={item} className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-300 flex-shrink-0" />
-                  {item}
-                </li>
-              ),
-            )}
+            {[
+              'membantu pengecekan resume',
+              'memberikan feedback',
+              'membantu latihan interview',
+              'tersedia job matching',
+            ].map((item) => (
+              <li key={item} className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-300 flex-shrink-0" />
+                {item}
+              </li>
+            ))}
           </ul>
           <p className="text-xs text-blue-300 mt-8 leading-relaxed">
             By signing up, you agree to the Terms of Service and acknowledge you&apos;ve read our Privacy Policy.

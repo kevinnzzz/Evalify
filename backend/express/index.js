@@ -12,6 +12,7 @@ const userRoutes = require('./routes/user');
 const feedbackRoutes = require('./routes/feedback');
 const contactRoutes = require('./routes/contact');
 const rolesRoutes = require('./routes/roles');
+const adminRoutes = require('./routes/admin'); // ← BARU
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -84,16 +85,23 @@ app.get('/', async (req, res) => {
       'POST /api/cv/review         (multipart: file, selected_role, mode)',
       'GET  /api/cv/reviews',
       'GET  /api/cv/reviews/:id',
-      // ─── Interview AI ─────────────────────────────────────────────────────────
-      'POST /api/interview/questions          (JSON: role, experience_level, ...)',
-      'POST /api/interview/question-tts       (form: text, language)',
-      'POST /api/interview/analyze            (multipart: role, answers_json, audio_1..audio_12)',
+      'POST /api/interview/questions',
+      'POST /api/interview/question-tts',
+      'POST /api/interview/analyze',
       'GET  /api/interview/sessions',
       'GET  /api/interview/sessions/:id',
       // ─── User & Feedback ──────────────────────────────────────────────────────
       'GET  /api/user/activity',
       'GET  /api/user/stats',
       'POST /api/user/feedback',
+      '--- ADMIN (role: admin only) ---',
+      'GET  /api/admin/statistics',
+      'GET  /api/admin/users',
+      'PATCH /api/admin/users/:id/status',
+      'PATCH /api/admin/users/:id/role',
+      'GET  /api/admin/activity-logs',
+      'GET  /api/admin/feedbacks',
+      'PATCH /api/admin/feedbacks/:id/status',
     ],
   });
 });
@@ -106,6 +114,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/roles', rolesRoutes);
+app.use('/api/admin', adminRoutes); // ← BARU
 
 // ─── 404 handler ──────────────────────────────────────────────────────────────
 app.use((req, res) => {
